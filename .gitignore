@@ -1,0 +1,20 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Data (Generated)
+data/processed/
+data/raw/
+*.db
+*.csv
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
