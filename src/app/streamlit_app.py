@@ -16,6 +16,36 @@ st.set_page_config(page_title="Project Controls Intelligence", layout="wide")
 
 DB_PATH = "data/processed/pc_intel.db"
 
+# Cloud Deployment Fix: Generate data if DB is missing
+if not os.path.exists(DB_PATH):
+    st.warning("Database not found. Initializing specific synthetic data for demo...")
+    try:
+        # Import data generation and ETL modules locally to avoid circular imports if any
+        # Adjust paths if necessary, but sys.path is already set
+        import sys
+        
+        # Ensure directories exist
+        os.makedirs("data/raw", exist_ok=True)
+        os.makedirs("data/processed", exist_ok=True)
+        
+        # Run Data Generation
+        from src.data_gen import generate_data
+        with st.spinner("Generating synthetic project data..."):
+            generate_data.generate_all()
+            
+        # Run ETL to build DB
+        from src.etl import load_all
+        with st.spinner("Building analytics database..."):
+            load_all.init_db()
+            load_all.process_all()
+            
+        st.success("Initialization complete! Loading dashboard...")
+        st.rerun()
+        
+    except Exception as e:
+        st.error(f"Failed to initialize data: {e}")
+        st.stop()
+
 # Load CSS
 def load_css():
     with open("src/app/assets/style.css") as f:
