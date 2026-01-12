@@ -9,7 +9,7 @@ venv/
 # Data (Generated)
 data/processed/
 data/raw/
-*.db
+# *.db  <-- Un-ignored for easier deployment
 *.csv
 
 # IDE
